@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#esse scripts é apenas para teste
+
 pwd
 cd $HOME/Documents/projetos/ekko-bank-android
 pwd
