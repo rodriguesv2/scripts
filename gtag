@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ $# -eq 1 ] #verifica se foi passado apenas um parametro
+	then
+		git checkout develop
+		git pull
+		git commit -am "version bump"
+		git push origin develop
+		git tag $1
+		git push --tags
+	else
+		echo "Por favor, digite a tag. Ex: 0.4.4-alpha"
+fi

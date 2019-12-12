@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pwd
+cd $HOME/Documents/projetos/ekko-bank-android
+pwd
+echo $1
+cd $HOME/Documents/projetos/recycard-android
+pwd
+echo $1

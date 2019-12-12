@@ -1,0 +1,10 @@
+#!/bin/bash
+
+git add .
+git commit -m "$1"
+
+#pega o nome da branch atual, porem com o prefixo refs/heads/
+ref=$(git symbolic-ref --quiet HEAD)
+
+#executa o push para origin usando a variavel ref, porem retirando o prefixo 
+git push origin ${ref#refs/heads/}
