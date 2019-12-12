@@ -2,10 +2,47 @@
 
 #esse scripts é apenas para teste
 
-pwd
-cd $HOME/Documents/projetos/ekko-bank-android
-pwd
-echo $1
-cd $HOME/Documents/projetos/recycard-android
-pwd
-echo $1
+ref=$(git symbolic-ref --quiet HEAD)
+branch="${ref#refs/heads/}"
+
+commit(){
+	git commit -am "$1"
+	git push origin $branch
+}
+
+nova_branch(){
+	while true; do
+		read -p "Digite o nome da nova branch: " nova_branch
+		if [[ -z "$nova_branch" ]]; then
+			echo "Digite um nome de branch valido"
+		else
+			git checkout -b $nova_branch
+			commit "$1"; break;
+		fi	
+	done
+
+}
+
+if [[ $# -ne 1 ]]; then
+	echo "Digite o texto do commit, Saindo..."
+	exit;
+fi
+
+if [[ $branch -eq "master" || $branch -eq "develop" ]]; then
+	while true; do
+		read -p "Você está na ${branch}, deseja commitar nela?: (S/n): " resposta
+		case $resposta in
+			[Ss]* ) commit "$1"; break;;
+			[Nn]* )	nova_branch "$1"; break;;
+			* ) echo "Por favor, responda sim ou não"
+		esac
+	done
+else
+	commit "$1"
+fi
+
+
+
+
+
+	
