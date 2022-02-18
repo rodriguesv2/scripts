@@ -1,0 +1,93 @@
+#!/bin/bash
+
+# Se algum comando do script falhar, isso garante que o script irá terminar imadiatamente
+set -e
+
+if [ -z "$1" ]; then
+  echo "ERROR: Digite a mensagem do commit. Ex: sh gitcs.sh \"Essa é uma mensagem\""
+  exit 1
+fi
+
+TYPE_SELECTED="undefined"
+ISSUE="NO-ISSUE"
+GIT_ADD_PATH="."
+
+# --
+# INICIO seleção de tipo de commit
+select_type() {
+  echo "1) feat"
+  echo "2) fix"
+  echo "3) chore"
+  echo "4) refactor"
+  echo "5) test"
+  echo "6) revert"
+  echo "7) style"
+  echo "8) docs"
+  read -p "Digite o número referente ao tipo do commit: " TYPE
+
+  case $TYPE in
+    1) TYPE_SELECTED="feat" ;;
+    2) TYPE_SELECTED="fix" ;;
+    3) TYPE_SELECTED="chore" ;;
+    4) TYPE_SELECTED="refactor" ;;
+    5) TYPE_SELECTED="test" ;;
+    6) TYPE_SELECTED="revert" ;;
+    7) TYPE_SELECTED="style" ;;
+    8) TYPE_SELECTED="docs" ;;
+  esac
+}
+
+while [ $TYPE_SELECTED = "undefined" ]; do
+  select_type
+  if [ $TYPE_SELECTED = "undefined" ]; then
+    echo
+    echo "ERROR: Opção inválida. Tente novamente"
+    echo
+  fi
+done
+# FINAL seleção de tipo de commit
+# --
+
+# --
+# INICIO input do código da issue
+echo
+read -p "Digite o código da issue (DEFAULT = NO-ISSUE): " NEW_ISSUE
+if [ -n "$NEW_ISSUE" ]; then
+    ISSUE=$NEW_ISSUE
+fi
+# FINAL input do código da issue
+# --
+
+# Montagem da mensagem do commit
+MESSAGE_COMPLETED="${TYPE_SELECTED}(${ISSUE}):($1)"
+
+echo
+echo "--"
+echo "$MESSAGE_COMPLETED"
+echo "--"
+
+
+# --
+# INICIO execução do commit com push para a origin
+echo
+read -p "Digite o/os arquivo/os para o \"git add\". (DEFAULT = git add .): " GIT_ADD
+echo
+
+if [ -n "$GIT_ADD" ]; then
+    GIT_ADD_PATH=$GIT_ADD
+    else
+      GIT_ADD_PATH="."
+fi
+
+git add $GIT_ADD_PATH
+git status
+
+git commit -m "$MESSAGE_COMPLETED"
+
+#pega o nome da branch atual, porem com o prefixo refs/heads/
+ref=$(git symbolic-ref --quiet HEAD)
+
+#executa o push para origin usando a variavel ref, porem retirando o prefixo
+git push origin ${ref#refs/heads/}
+# FINAL execução do commit com push para a origin
+# --
