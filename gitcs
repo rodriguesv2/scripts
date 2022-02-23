@@ -70,7 +70,7 @@ echo "--"
 # --
 # INICIO execução do commit com push para a origin
 echo
-read -p "Digite o/os arquivo/os para o \"git add\". (DEFAULT = git add .): " GIT_ADD
+read -p "Digite o/os arquivo/os para o \"git add\" (DEFAULT = git add .): " GIT_ADD
 echo
 
 if [ -n "$GIT_ADD" ]; then
